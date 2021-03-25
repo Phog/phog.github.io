@@ -767,7 +767,8 @@ function updateLoadingProgress() {
 function loadPNG(rgbaUrl) {
   const rgbaPromise = fetch(rgbaUrl, {
                         method: 'GET',
-                        mode: 'same-origin',
+                        mode: 'cors',
+                        credentials: 'omit',
                       }).then(response => {
     return response.arrayBuffer();
   }).then(buffer => {
@@ -956,7 +957,8 @@ function loadScene(dirUrl, width, height) {
       'scene_params.json';
   let sceneParamsPromise = fetch(sceneParamsUrl, {
                              method: 'GET',
-                             mode: 'same-origin',
+                             mode: 'cors',
+                             credentials: 'omit',
                            }).then(response => {
     return response.json();
   });
@@ -969,6 +971,7 @@ function loadScene(dirUrl, width, height) {
 
   // Load the indirection grid.
   const imageLoader = new THREE.ImageLoader();
+  imageLoader.crossOrigin = 'anonymous';
   let atlasIndexUrl = dirUrl + '/' + 'atlas_indices.png';
   const atlasIndexPromise = new Promise(function(resolve, reject) {
     imageLoader.load(atlasIndexUrl, atlasIndexImage => {
