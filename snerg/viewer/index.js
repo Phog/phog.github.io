@@ -1171,6 +1171,8 @@ function initFromParameters() {
  * @return {boolean}
  */
 function isRendererUnsupported() {
+  let loading = document.getElementById('Loading');
+  
   let gl = document.getElementsByTagName("canvas")[0].getContext('webgl2');
   if (!gl) {
     loading.innerHTML = "Error: WebGL2 context not found. Is your machine" +
