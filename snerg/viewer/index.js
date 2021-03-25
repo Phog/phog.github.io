@@ -935,7 +935,7 @@ function loadVolumeTexturePNG(
               for (let y = 0; y < volume_height; ++y) {
               gl.texSubImage3D(
                   gl.TEXTURE_3D, 0, 0, y, z + i * slice_depth, 
-                  volume_width, 1, 1, gl.RGB, gl.UNSIGNED_BYTE,
+                  volume_width, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE,
                   rgbaImage, 4 * volume_width * (y + volume_height * z));
               }
             }
