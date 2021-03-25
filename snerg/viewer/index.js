@@ -848,16 +848,27 @@ function loadSplitVolumeTexturePNG(
             let oldTexture = gl.getParameter(gl.TEXTURE_BINDING_3D);
             gl.bindTexture(
                 gl.TEXTURE_3D, rgbTextureProperties['__webglTexture']);
-            gl.texSubImage3D(
-                gl.TEXTURE_3D, 0, 0, 0, i * slice_depth, volume_width,
-                volume_height, slice_depth, gl.RGB, gl.UNSIGNED_BYTE,
-                rgbPixels, 0);
+            // Upload row-by-row to work around bug with Intel + Mac OSX.
+            for (let z = 0; z < slice_depth; ++z) {
+              for (let y = 0; y < volume_height; ++y) {
+              gl.texSubImage3D(
+                  gl.TEXTURE_3D, 0, 0, y, z + i * slice_depth, 
+                  volume_width, 1, 1, gl.RGB, gl.UNSIGNED_BYTE,
+                  rgbPixels, 3 * volume_width * (y + volume_height * z));
+              }
+            }
+
             gl.bindTexture(
                 gl.TEXTURE_3D, alphaTextureProperties['__webglTexture']);
-            gl.texSubImage3D(
-                gl.TEXTURE_3D, 0, 0, 0, i * slice_depth, volume_width,
-                volume_height, slice_depth, gl.RED, gl.UNSIGNED_BYTE,
-                alphaPixels, 0);
+            // Upload row-by-row to work around bug with Intel + Mac OSX.
+            for (let z = 0; z < slice_depth; ++z) {
+              for (let y = 0; y < volume_height; ++y) {
+              gl.texSubImage3D(
+                  gl.TEXTURE_3D, 0, 0, y, z + i * slice_depth, 
+                  volume_width, 1, 1, gl.RED, gl.UNSIGNED_BYTE,
+                  alphaPixels, volume_width * (y + volume_height * z));
+              }
+            }
             gl.bindTexture(gl.TEXTURE_3D, oldTexture);
 
             resolve(texture_rgb);
@@ -919,10 +930,15 @@ function loadVolumeTexturePNG(
             let oldTexture = gl.getParameter(gl.TEXTURE_BINDING_3D);
             let textureHandle = textureProperties['__webglTexture'];
             gl.bindTexture(gl.TEXTURE_3D, textureHandle);
-            gl.texSubImage3D(
-                gl.TEXTURE_3D, 0, 0, 0, i * slice_depth,
-                volume_width, volume_height, slice_depth,
-                gl.RGBA, gl.UNSIGNED_BYTE, rgbaImage, 0);
+            // Upload row-by-row to work around bug with Intel + Mac OSX.
+            for (let z = 0; z < slice_depth; ++z) {
+              for (let y = 0; y < volume_height; ++y) {
+              gl.texSubImage3D(
+                  gl.TEXTURE_3D, 0, 0, y, z + i * slice_depth, 
+                  volume_width, 1, 1, gl.RGB, gl.UNSIGNED_BYTE,
+                  rgbaImage, 4 * volume_width * (y + volume_height * z));
+              }
+            }
             gl.bindTexture(gl.TEXTURE_3D, oldTexture);
 
             resolve(texture);
