@@ -63,6 +63,16 @@ body {
   margin: 0px;
 }
 
+#LoadingSpinner {
+  width: 80px;
+  height: 80px;
+  padding: 0px;
+  margin: -40px 0 0 -40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
 #viewspacecontainer {
   position: relative;
   text-align: left;
@@ -78,6 +88,7 @@ body {
   background: #fff;
 }
 </style>
+<link rel="stylesheet" href="loadingspinner.css">
 </head>
 <body>
 
@@ -95,6 +106,22 @@ body {
     <span id="texturergbprogress">RGBA images: 0/?</span>,
     <span id="texturefeaturesprogress">feature images: 0/?</span>
     </h4>
+  </div>
+  <div id="LoadingSpinner">
+    <div class="lds-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
   <div class=viewspace id="viewspace">
   </div>

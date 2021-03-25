@@ -742,6 +742,8 @@ function addHandlers() {
 function hideLoading() {
   let loading = document.getElementById('Loading');
   loading.style.display = 'none';
+  let loadingSpinner = document.getElementById('LoadingSpinner');
+  loadingSpinner.style.display = 'none';
 }
 
 /**
