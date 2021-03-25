@@ -1186,11 +1186,11 @@ function isRendererUnsupported() {
   }
 
   var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-  if (!renderer || renderer.search("SwiftShader") > 0 ||
-      (renderer.search("ANGLE") > 0 &&
-       renderer.search("Intel") > 0 &&
-       (renderer.search("HD Graphics") > 0 || 
-        renderer.search("UHD Graphics") > 0))) {
+  if (!renderer || renderer.search("SwiftShader") >= 0 ||
+      (renderer.search("ANGLE") >= 0 &&
+       renderer.search("Intel") >= 0 &&
+       (renderer.search("HD Graphics") >= 0 || 
+        renderer.search("UHD Graphics") >= 0))) {
   loading.innerHTML = "Error: Unsupported renderer: " + renderer +
     ". Are you running with hardware acceleration enabled?";
     return true;
