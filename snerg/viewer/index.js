@@ -740,10 +740,31 @@ function addHandlers() {
  * Hides the Loading prompt.
  */
 function hideLoading() {
-  let loading = document.getElementById('Loading');
-  loading.style.display = 'none';
   let loadingSpinner = document.getElementById('LoadingSpinner');
   loadingSpinner.style.display = 'none';
+
+  let loading = document.getElementById('Loading');
+  let gl = document.getElementsByTagName("canvas")[0].getContext('webgl2');
+  if (!gl) {
+    loading.innerHTML = "Warning: WebGL2 context not found. Is your machine" +
+    " equipped with a discrete GPU?";
+    return;
+  }
+
+  var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+  if (!debugInfo) {
+    loading.innerHTML = "Warning: Could not fetch renderer info. Is your"
+    " machine equipped with a discrete GPU?";
+    return;
+  }
+
+  var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+  if (!renderer || renderer.search("SwiftShader") > 0) {
+  loading.innerHTML = "Warning: Unsupported renderer: " + renderer +
+    ". Are you running with hardware acceleration enabled?";
+    return;
+  }
+  loading.style.display = 'none';
 }
 
 /**
