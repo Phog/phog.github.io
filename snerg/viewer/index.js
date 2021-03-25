@@ -744,26 +744,6 @@ function hideLoading() {
   loadingSpinner.style.display = 'none';
 
   let loading = document.getElementById('Loading');
-  let gl = document.getElementsByTagName("canvas")[0].getContext('webgl2');
-  if (!gl) {
-    loading.innerHTML = "Warning: WebGL2 context not found. Is your machine" +
-    " equipped with a discrete GPU?";
-    return;
-  }
-
-  var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-  if (!debugInfo) {
-    loading.innerHTML = "Warning: Could not fetch renderer info. Is your"
-    " machine equipped with a discrete GPU?";
-    return;
-  }
-
-  var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-  if (!renderer || renderer.search("SwiftShader") > 0) {
-  loading.innerHTML = "Warning: Unsupported renderer: " + renderer +
-    ". Are you running with hardware acceleration enabled?";
-    return;
-  }
   loading.style.display = 'none';
 }
 
@@ -1186,11 +1166,50 @@ function initFromParameters() {
 }
 
 /**
+ * Checks whether the WebGL context is valid and the underlying hardware is
+ * powerful enough. Otherwise displays a warning.
+ * @return {boolean}
+ */
+function isRendererUnsupported() {
+  let gl = document.getElementsByTagName("canvas")[0].getContext('webgl2');
+  if (!gl) {
+    loading.innerHTML = "Error: WebGL2 context not found. Is your machine" +
+    " equipped with a discrete GPU?";
+    return true;
+  }
+
+  var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+  if (!debugInfo) {
+    loading.innerHTML = "Error: Could not fetch renderer info. Is your"
+    " machine equipped with a discrete GPU?";
+    return true;
+  }
+
+  var renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+  if (!renderer || renderer.search("SwiftShader") > 0) {
+  loading.innerHTML = "Error: Unsupported renderer: " + renderer +
+    ". Are you running with hardware acceleration enabled?";
+    return true;
+  }
+
+  return false;
+}
+
+
+/**
  * Set up code that needs to run once after the  scene parameters have loaded.
  */
 function loadOnFirstFrame() {
   // Early out if we've already run this function.
   if (gSceneParams['loadingTextures']) {
+    return;
+  }
+
+  // Also early out if the renderer is not supported.
+  if (isRendererUnsupported()) {
+    gSceneParams['loadingTextures'] = true;
+    let loadingSpinner = document.getElementById('LoadingSpinner');
+    loadingSpinner.style.display = 'none';
     return;
   }
 
